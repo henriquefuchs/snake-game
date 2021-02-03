@@ -5,12 +5,10 @@ import java.awt.*;
 
 public class GameWindow extends JFrame {
 
-    private Rect background;
-    private Rect rect;
+    private Renderer renderer;
 
     public GameWindow() {
-        background = new Rect(0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT, Constants.BACKGROUND_COLOR);
-        rect = new Rect(60, 70, 200, 80, Color.GREEN);
+        renderer = new Renderer();
 
         setTitle(Constants.GAME_TITLE);
         setSize(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
@@ -22,7 +20,10 @@ public class GameWindow extends JFrame {
 
     @Override
     public void paint(Graphics g) {
-        background.draw(g);
-        rect.draw(g);
+        renderer.render(g);
+    }
+
+    public Renderer getRenderer() {
+        return renderer;
     }
 }
