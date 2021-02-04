@@ -1,4 +1,6 @@
-package snake;
+package com.henriquefuchs.snake;
+
+import com.henriquefuchs.snake.core.Game;
 
 public class Application {
 

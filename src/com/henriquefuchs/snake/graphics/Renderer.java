@@ -1,4 +1,4 @@
-package snake;
+package com.henriquefuchs.snake.graphics;
 
 import java.awt.*;
 import java.util.ArrayList;
