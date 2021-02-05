@@ -1,8 +1,8 @@
 package com.henriquefuchs.snake.core;
 
+import com.henriquefuchs.snake.graphics.Renderer;
 import com.henriquefuchs.snake.scene.Snake;
 import com.henriquefuchs.snake.util.Constants;
-import com.henriquefuchs.snake.graphics.Renderer;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +15,8 @@ public class GameWindow extends JFrame implements KeyListener {
     private Snake snake;
     private Image buffer;
     private Graphics gImage;
+    private Rectangle drawingArea;
+    private long lastKeyboardEventTime;
 
     public GameWindow(Snake snake) {
         this.renderer = new Renderer();
@@ -30,10 +32,23 @@ public class GameWindow extends JFrame implements KeyListener {
 
         this.buffer = createImage(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT);
         this.gImage = buffer.getGraphics();
+
+        defineDrawingArea();
+    }
+
+    private void defineDrawingArea() {
+        int upperY = Constants.WINDOW_HEIGHT - (int) getContentPane().getSize().getHeight();
+        drawingArea = new Rectangle(0, upperY, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT - upperY);
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
+        long now = System.currentTimeMillis();
+
+        if (now - lastKeyboardEventTime < Constants.GAME_MIN_TIME_BETWEEN_KEYBOARD_EVENTS) {
+            return;
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_UP) {
             snake.up();
         } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -45,12 +60,16 @@ public class GameWindow extends JFrame implements KeyListener {
         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
+
+        this.lastKeyboardEventTime = now;
     }
 
     @Override
     public void paint(Graphics gScreen) {
-        renderer.render(gImage);
-        gScreen.drawImage(buffer, 0, 0, null);
+        if (renderer != null && gImage != null && buffer != null) {
+            renderer.render(gImage);
+            gScreen.drawImage(buffer, 0, 0, null);
+        }
     }
 
     public Renderer getRenderer() {
@@ -63,5 +82,9 @@ public class GameWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+    }
+
+    public Rectangle getDrawingArea() {
+        return drawingArea;
     }
 }
